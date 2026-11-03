@@ -1116,3 +1116,9 @@ body.selected .page{width:100%;max-width:none;--page-inset:clamp(36px,5vw,160px)
  .selected .selected-story.enhanced .selected-copy{height:auto}
 }
 @media(prefers-reduced-motion:reduce){.selected .cover>.hero-art{transform:none!important}}
+
+@media(min-width:761px) and (max-width:1100px){
+ .selected .hero{min-height:clamp(620px,calc(100svh - 76px),760px)}
+ .selected .cover>.hero-art{top:0;bottom:0;right:12px;width:min(62vw,600px);height:100%;mask-size:contain;mask-position:right bottom;transform:none}
+ .selected .services>.service-cta{grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--grid-gap)}
+}

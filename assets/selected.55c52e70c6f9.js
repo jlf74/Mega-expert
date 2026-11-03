@@ -50,7 +50,7 @@ const form=document.getElementById('request-form');form.addEventListener('submit
   const small=matchMedia('(max-width:760px)');
   let inView=false,frame=0,current=0,target=0,velocity=0,travel=0,height=1,lastTime=0;
   const enabled=()=>inView&&!reduced.matches;
-  function measure(){height=Math.max(1,cover.offsetHeight);travel=small.matches?Math.min(28,height*.045):Math.max(0,art.offsetHeight-height-art.offsetHeight*.12)}
+  function measure(){height=Math.max(1,cover.offsetHeight);travel=small.matches?Math.min(48,height*.07):Math.max(0,art.offsetHeight-height-art.offsetHeight*.12)}
   function setTarget(){
     const progress=Math.max(0,Math.min(1,-cover.getBoundingClientRect().top/(height*.7)));
     target=-travel*progress;
