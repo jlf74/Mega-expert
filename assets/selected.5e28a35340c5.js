@@ -36,7 +36,7 @@ video.addEventListener('seeked',seek);
 video.addEventListener('loadedmetadata',schedule);
 video.addEventListener('loadeddata',()=>{if(!enabled())video.style.opacity=innerWidth<=900?'0':'1';else schedule()});
 video.addEventListener('error',()=>{failed=true;update()});
-new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;update()},{rootMargin:'150px'}).observe(track);
+new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;update()},{rootMargin:'0px 0px -10% 0px'}).observe(track);
 addEventListener('scroll',schedule,{passive:true});addEventListener('resize',update,{passive:true});
 reduced.addEventListener('change',update);mobile.addEventListener('change',update);
 if(document.fonts)document.fonts.ready.then(update);
