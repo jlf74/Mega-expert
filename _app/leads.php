@@ -20,8 +20,9 @@ function ready(array $cfg): bool {
         && filter_var($cfg['email']['to'] ?? '', FILTER_VALIDATE_EMAIL)
         && filter_var($cfg['email']['username'] ?? '', FILTER_VALIDATE_EMAIL)
         && ($cfg['email']['password'] ?? '') !== ''
-        && preg_match('/^\d{5,20}:[A-Za-z0-9_-]{20,100}$/D', $cfg['telegram']['token'] ?? '') === 1
-        && preg_match('/^-?\d{1,20}$/D', (string)($cfg['telegram']['chat_id'] ?? '')) === 1;
+        && (($cfg['telegram']['enabled'] ?? true) === false || (
+            preg_match('/^\d{5,20}:[A-Za-z0-9_-]{20,100}$/D', $cfg['telegram']['token'] ?? '') === 1
+            && preg_match('/^-?\d{1,20}$/D', (string)($cfg['telegram']['chat_id'] ?? '')) === 1));
 }
 function storage(): string { return dirname(__DIR__) . '/.private'; }
 function writeJson(string $file, array $data): void {
@@ -211,7 +212,14 @@ function processRequest(string $base,string $id,array $cfg,?callable $mailTransp
         $attempted=false;
         foreach(['email','telegram'] as $channel){
             $state=&$record['delivery'][$channel];
-            if($state['done']||$state['next_at']>time())continue;
+            if($channel==='telegram' && ($cfg['telegram']['enabled'] ?? true) === false){
+                if(!$state['done']){
+                    $state['done']=true;$state['skipped']=true;
+                    unset($state['last_error']);writeJson($file,$record);
+                }
+                unset($state);continue;
+            }
+            if($state['done']||$state['next_at']>time()){unset($state);continue;}
             // Retry for at most 7 days; leave failed records for the owner to inspect.
             if(time()-$record['created_ts']>7*86400)continue;
             try{
