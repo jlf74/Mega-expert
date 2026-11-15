@@ -6,7 +6,8 @@
  header('Cache-Control: no-store, private, max-age=0');
  header('X-Robots-Tag: noindex, nofollow, noarchive');
  header('X-Content-Type-Options: nosniff');
- header('Referrer-Policy: no-referrer');
+ // Native form POSTs need their same-origin provenance; external requests omit the referrer.
+ header('Referrer-Policy: same-origin');
  header("Content-Security-Policy: default-src 'none'; style-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'");
  function esc(mixed $s): string {return htmlspecialchars((string)$s,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8');}
  function fail(int $code,string $text): never {http_response_code($code);echo esc($text);exit;}
