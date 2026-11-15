@@ -30,7 +30,7 @@ try {
     $maxPost=sizeLimit((string)ini_get('post_max_size'));
     if((int)($_SERVER['CONTENT_LENGTH']??0)>min(11*1048576,$maxPost?:11*1048576))throw new FormError(413,'Общий размер вложений слишком большой.');
     checkToken($_POST,$_SESSION);
-    if(!ready($cfg))throw new FormError(503,'Приём заявок через форму пока готовится. Напишите на info@mega-expert.ru или в Telegram.');
+    if(!ready($cfg))throw new FormError(503,'Приём заявок через форму пока готовится. Напишите на info@m-ex.ru или в Telegram.');
     $lead=validate($_POST);$id=$_POST['submission_id'];$base=storage();
     $key=hash_hmac('sha256',session_id(),$cfg['storage_salt']);
     if(isset($_SESSION['accepted'])){
@@ -53,5 +53,5 @@ try {
 } catch(Throwable){
     if(session_status()===PHP_SESSION_ACTIVE)session_write_close();
     error_log('MegaExpert lead endpoint failed');
-    reply(503,['ok'=>false,'message'=>'Не удалось принять заявку. Попробуйте позже или напишите на info@mega-expert.ru.']);
+    reply(503,['ok'=>false,'message'=>'Не удалось принять заявку. Попробуйте позже или напишите на info@m-ex.ru.']);
 }

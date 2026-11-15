@@ -71,7 +71,7 @@ function validate(array $data): array {
     if (!in_array($source, ['contacts','project','header','hero','services','reference','reference-list'], true)) $source='project';
     return ['name'=>$name, 'company'=>$company, 'contact'=>$contact, 'task'=>$task,
         'reference'=>($data['reference'] ?? '')==='yes', 'source'=>$source,
-        'consent'=>['accepted'=>true, 'version'=>'2026-11-06', 'document'=>'https://mega-expert.ru/documents/consent.html']];
+        'consent'=>['accepted'=>true, 'version'=>'2026-11-15', 'document'=>'https://mega-expert.ru/documents/consent.html']];
 }
 function checkOrigin(array $server, array $cfg): void {
     $allowed=$cfg['origins'] ?? ['https://mega-expert.ru','https://www.mega-expert.ru'];
