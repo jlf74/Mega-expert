@@ -70,8 +70,8 @@ function validate(array $data): array {
     $source = text($data, 'request_source', 80);
     if (!in_array($source, ['contacts','project','header','hero','services','reference','reference-list'], true)) $source='project';
     return ['name'=>$name, 'company'=>$company, 'contact'=>$contact, 'task'=>$task,
-        'reference'=>($data['reference'] ?? '')==='yes', 'source'=>$source,
-        'consent'=>['accepted'=>true, 'version'=>'2026-11-15', 'document'=>'https://mega-expert.ru/documents/consent.html']];
+        'reference'=>false, 'source'=>$source,
+        'consent'=>['accepted'=>true, 'version'=>'2026-11-18', 'document'=>'https://mega-expert.ru/documents/consent.html']];
 }
 function checkOrigin(array $server, array $cfg): void {
     $allowed=$cfg['origins'] ?? ['https://mega-expert.ru','https://www.mega-expert.ru'];
@@ -164,7 +164,7 @@ function body(array $record, bool $telegram=false): string {
     $l=$record['lead'];$task=$l['task'];
     if ($telegram) {preg_match('/^.{0,2500}/us',$task,$match);$task=$match[0]??'';if($task!==$l['task'])$task.="\nПолное описание — в письме.";}
     return "Заявка МегаЭксперт № ".$record['id']."\nДата (UTC): ".$record['created_at']."\nИмя: ".$l['name']."\nКомпания: ".($l['company']?:'—')
-        ."\nКонтакт: ".$l['contact']."\nРеференс-лист: ".($l['reference']?'да':'нет')
+        ."\nКонтакт: ".$l['contact']
         ."\nИсточник: ".$l['source']."\n\nЗадача:\n".($task?:'—')
         ."\n\nСогласие: ".$l['consent']['version']."\nВложений: ".count($record['attachments']);
 }
@@ -178,7 +178,7 @@ function sendMail(array $cfg,array $record,string $base): void {
     $mail->SMTPOptions=['ssl'=>['verify_peer'=>true,'verify_peer_name'=>true,'allow_self_signed'=>false]];
     $mail->setFrom($cfg['email']['username'],'МегаЭксперт — заявки с сайта');$mail->addAddress($cfg['email']['to']);
     if(filter_var($record['lead']['contact'],FILTER_VALIDATE_EMAIL))$mail->addReplyTo($record['lead']['contact']);
-    $mail->Subject=($record['lead']['reference']?'Запрос референс-листа':'Заявка с сайта').' — МегаЭксперт';
+    $mail->Subject='Заявка с сайта — МегаЭксперт';
     $mail->MessageID='<lead-'.$record['id'].'@mega-expert.ru>';$mail->Body=body($record);
     foreach($record['attachments'] as $file)$mail->addAttachment($base.'/'.$file['path'],$file['name'],'base64',$file['mime']);
     if(!$mail->send())throw new \RuntimeException('Email transport failed');
